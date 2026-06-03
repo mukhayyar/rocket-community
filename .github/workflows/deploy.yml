@@ -1,0 +1,26 @@
+name: Deploy to Coolify
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Coolify Deployment
+        env:
+          COOLIFY_TOKEN: ${{ secrets.COOLIFY_TOKEN }}
+        run: |
+          echo "🚀 Triggering Coolify deployment..."
+
+          # Webhook endpoint to trigger redeploy (if webhook is configured in Coolify)
+          # This assumes you have a webhook URL from Coolify
+          curl -X POST \
+            -H "Authorization: Bearer $COOLIFY_TOKEN" \
+            https://coolify.mukhayyar.my.id/api/webhooks/deploy \
+            -d '{"repository": "mukhayyar/rocket-community"}' \
+            -H "Content-Type: application/json" || echo "Webhook endpoint not found"
+
+          echo "✅ Deployment triggered"
