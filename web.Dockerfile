@@ -1,14 +1,14 @@
-FROM node:18-alpine as builder
+FROM node:18-slim AS builder
 
 WORKDIR /app
 
 COPY web/openrocket-web/package*.json ./
-RUN npm ci
+RUN npm install
 
 COPY web/openrocket-web/ ./
 RUN npm run build
 
-FROM nginx:alpine
+FROM nginx:stable
 
 COPY --from=builder /app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
