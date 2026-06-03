@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  rocket-backend:
+    build:
+      context: .
+      dockerfile: server.Dockerfile
+    container_name: rocket-backend
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+    volumes:
+      - rocket-backend-data:/app
+    restart: unless-stopped
+    networks:
+      - rocket-network
+
+  rocket-frontend:
+    build:
+      context: .
+      dockerfile: web.Dockerfile
+    container_name: rocket-frontend
+    ports:
+      - "8080:80"
+    environment:
+      - VITE_API_URL=/api
+    restart: unless-stopped
+    networks:
+      - rocket-network
+    depends_on:
+      - rocket-backend
+
+volumes:
+  rocket-backend-data:
+
+networks:
+  rocket-network:
+    driver: bridge
