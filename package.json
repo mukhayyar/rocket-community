@@ -1,0 +1,24 @@
+{
+  "name": "rocket-community",
+  "version": "0.1.0",
+  "description": "Community-driven rocket visualization platform",
+  "type": "module",
+  "scripts": {
+    "install-all": "npm install && cd server && npm install && cd ../web/openrocket-web && npm install",
+    "dev": "concurrently 'cd server && npm start' 'cd web/openrocket-web && npm run dev'",
+    "build": "cd web/openrocket-web && npm run build",
+    "preview": "cd web/openrocket-web && npm run preview"
+  },
+  "keywords": [
+    "rocket",
+    "visualization",
+    "openrocket",
+    "3d",
+    "community"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}
