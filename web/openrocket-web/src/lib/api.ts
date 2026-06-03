@@ -1,11 +1,10 @@
-// API configuration - supports both absolute URLs and relative paths
+// API configuration
 const getApiBase = () => {
-  // In development: use localhost:3000
-  // In production: use relative path /api or environment variable
   if (import.meta.env.DEV) {
     return 'http://localhost:3000'
   }
-  return import.meta.env.VITE_API_URL || '/api'
+  // In production, Caddy proxies /api/* to the backend
+  return ''
 }
 
 const API_BASE = getApiBase()
