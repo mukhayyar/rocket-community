@@ -1,8 +1,8 @@
-FROM node:18-slim AS builder
+FROM node:18 AS builder
 
 WORKDIR /app
 
-COPY web/openrocket-web/package*.json ./
+COPY web/openrocket-web/package.json ./
 RUN npm install
 
 COPY web/openrocket-web/ ./
