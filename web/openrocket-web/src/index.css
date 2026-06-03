@@ -1,0 +1,43 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* MapLibre GL styles */
+.maplibregl-canvas {
+  border-radius: 8px;
+}
+
+.maplibregl-marker {
+  cursor: pointer;
+}
+
+/* Dark theme override */
+.maplibregl-ctrl-group {
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(148, 163, 184, 0.5);
+}
+
+.maplibregl-ctrl-group button {
+  background: rgb(51, 65, 85);
+  color: white;
+  border: none;
+}
+
+.maplibregl-ctrl-group button:hover {
+  background: rgb(71, 85, 105);
+}
+
+/* Three.js canvas background */
+canvas {
+  display: block;
+}

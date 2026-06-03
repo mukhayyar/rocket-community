@@ -1,0 +1,34 @@
+{
+  "name": "openrocket-web",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.21.0",
+    "three": "^0.160.0",
+    "@react-three/fiber": "^8.15.0",
+    "@react-three/drei": "^9.98.0",
+    "zustand": "^4.4.0",
+    "maplibre-gl": "^3.3.1",
+    "xml2js": "^0.6.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "vite": "^5.0.0",
+    "@vitejs/plugin-react": "^4.2.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@types/three": "^0.160.0",
+    "@types/maplibre-gl": "^3.22.0",
+    "@types/xml2js": "^0.4.11",
+    "tailwindcss": "^3.4.0",
+    "postcss": "^8.4.31",
+    "autoprefixer": "^10.4.16"
+  }
+}
