@@ -1,5 +1,5 @@
 import { Canvas } from '@react-three/fiber'
-import { OrbitControls, Grid, Axes, Stars } from '@react-three/drei'
+import { OrbitControls, Grid, Stars } from '@react-three/drei'
 import { useVisualizerStore } from '../store'
 import Rocket from './Rocket'
 import Trajectory from './Trajectory'
@@ -17,8 +17,8 @@ export default function Scene() {
 
       {/* Environment */}
       <Stars radius={500} depth={100} count={1000} factor={4} />
-      <Axes args={[200, 200, 200]} />
-      <Grid args={[400, 400]} gridSize={20} cellSize={10} cellColor="#0f0" sectionSize={100} sectionColor="#00ff00" />
+      <axesHelper args={[200]} />
+      <Grid args={[400, 400]} cellSize={10} cellColor="#0f0" sectionSize={100} sectionColor="#00ff00" />
 
       {/* Scene objects */}
       <Rocket />
