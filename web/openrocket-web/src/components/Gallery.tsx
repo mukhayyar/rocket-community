@@ -39,27 +39,27 @@ export default function Gallery() {
   if (loading) return <div className="p-8 text-center">Loading gallery...</div>
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 p-8">
+    <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 px-4 py-6 sm:p-8">
       <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6">
           <div>
-            <h1 className="text-4xl font-bold text-white mb-2">Rocket Community</h1>
-            <p className="text-slate-300">{rockets.length} rockets shared</p>
+            <h1 className="text-2xl sm:text-4xl font-bold text-white mb-1">Rocket Community</h1>
+            <p className="text-slate-300 text-sm sm:text-base">{rockets.length} rockets shared</p>
           </div>
           <Link
             to="/upload"
-            className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg font-semibold transition"
+            className="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 sm:px-6 sm:py-3 rounded-lg font-semibold transition text-center text-sm sm:text-base"
           >
             + Upload Rocket
           </Link>
         </div>
 
-        <div className="flex gap-2 mb-8">
+        <div className="flex gap-2 mb-6 overflow-x-auto pb-2 -mx-1 px-1">
           {(['recent', 'trending', 'altitude', 'distance'] as SortOption[]).map((option) => (
             <button
               key={option}
               onClick={() => setSortBy(option)}
-              className={`px-4 py-2 rounded-lg font-medium transition ${
+              className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg font-medium transition text-sm whitespace-nowrap ${
                 sortBy === option
                   ? 'bg-orange-500 text-white'
                   : 'bg-slate-700 text-slate-200 hover:bg-slate-600'
@@ -70,21 +70,21 @@ export default function Gallery() {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {rockets.map((rocket) => (
             <Link
               key={rocket.id}
               to={`/rocket/${rocket.id}`}
-              className="bg-slate-700 rounded-lg overflow-hidden hover:transform hover:scale-105 transition"
+              className="bg-slate-700 rounded-lg overflow-hidden active:scale-[0.98] sm:hover:scale-105 transition"
             >
-              <div className="bg-gradient-to-b from-blue-600 to-blue-900 h-48 flex items-center justify-center">
-                <div className="text-4xl">🚀</div>
+              <div className="bg-gradient-to-b from-blue-600 to-blue-900 h-32 sm:h-48 flex items-center justify-center">
+                <div className="text-3xl sm:text-4xl">🚀</div>
               </div>
-              <div className="p-4">
-                {rocket.featured && <div className="text-sm bg-yellow-500 text-black px-2 py-1 rounded mb-2 inline-block">Featured</div>}
-                <h3 className="text-xl font-bold text-white mb-1">{rocket.name}</h3>
-                <p className="text-slate-300 text-sm mb-3">by {rocket.designer}</p>
-                <div className="grid grid-cols-3 gap-2 text-sm text-slate-300">
+              <div className="p-3 sm:p-4">
+                {rocket.featured && <div className="text-xs sm:text-sm bg-yellow-500 text-black px-2 py-0.5 rounded mb-2 inline-block">Featured</div>}
+                <h3 className="text-lg sm:text-xl font-bold text-white mb-1 truncate">{rocket.name}</h3>
+                <p className="text-slate-300 text-xs sm:text-sm mb-2 sm:mb-3">by {rocket.designer}</p>
+                <div className="grid grid-cols-3 gap-1 sm:gap-2 text-xs sm:text-sm text-slate-300">
                   <div>
                     <div className="font-semibold text-orange-400">{rocket.maxAltitude.toLocaleString()}m</div>
                     <div>Altitude</div>
@@ -98,18 +98,18 @@ export default function Gallery() {
                     <div>Time</div>
                   </div>
                 </div>
-                <div className="mt-3 text-xs text-slate-400">👁 {rocket.views} views</div>
+                <div className="mt-2 text-xs text-slate-400">👁 {rocket.views} views</div>
               </div>
             </Link>
           ))}
         </div>
 
         {rockets.length === 0 && (
-          <div className="text-center py-16">
-            <p className="text-slate-300 text-lg mb-4">No rockets yet. Be the first to upload!</p>
+          <div className="text-center py-12 sm:py-16">
+            <p className="text-slate-300 text-base sm:text-lg mb-4">No rockets yet. Be the first to upload!</p>
             <Link
               to="/upload"
-              className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-lg font-semibold transition inline-block"
+              className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 sm:px-8 sm:py-4 rounded-lg font-semibold transition inline-block"
             >
               Upload Your First Rocket
             </Link>

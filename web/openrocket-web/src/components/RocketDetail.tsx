@@ -101,7 +101,7 @@ export default function RocketDetail() {
   return (
     <div className="bg-black">
       {/* 3D Visualization */}
-      <div style={{ width: '100vw', height: '60vh', overflow: 'hidden' }}>
+      <div style={{ width: '100vw', height: '40vh', minHeight: '250px', overflow: 'hidden' }} className="sm:!h-[60vh]">
         <Scene />
         <Dashboard />
         <Controls />
@@ -109,24 +109,24 @@ export default function RocketDetail() {
 
       {/* Details Section */}
       <div className="bg-gradient-to-b from-slate-900 to-slate-800">
-        <div className="max-w-4xl mx-auto px-8 py-12">
-          <div className="grid grid-cols-3 gap-8 mb-12">
-            <div className="bg-slate-700 rounded-lg p-6">
-              <div className="text-slate-400 text-sm mb-1">Max Altitude</div>
-              <div className="text-3xl font-bold text-orange-400">{rocket.maxAltitude.toLocaleString()} m</div>
+        <div className="max-w-4xl mx-auto px-4 py-6 sm:px-8 sm:py-12">
+          <div className="grid grid-cols-3 gap-2 sm:gap-8 mb-6 sm:mb-12">
+            <div className="bg-slate-700 rounded-lg p-3 sm:p-6">
+              <div className="text-slate-400 text-xs sm:text-sm mb-1">Max Altitude</div>
+              <div className="text-lg sm:text-3xl font-bold text-orange-400">{rocket.maxAltitude.toLocaleString()} m</div>
             </div>
-            <div className="bg-slate-700 rounded-lg p-6">
-              <div className="text-slate-400 text-sm mb-1">Max Distance</div>
-              <div className="text-3xl font-bold text-orange-400">{rocket.maxDistance.toLocaleString()} m</div>
+            <div className="bg-slate-700 rounded-lg p-3 sm:p-6">
+              <div className="text-slate-400 text-xs sm:text-sm mb-1">Max Distance</div>
+              <div className="text-lg sm:text-3xl font-bold text-orange-400">{rocket.maxDistance.toLocaleString()} m</div>
             </div>
-            <div className="bg-slate-700 rounded-lg p-6">
-              <div className="text-slate-400 text-sm mb-1">Flight Time</div>
-              <div className="text-3xl font-bold text-orange-400">{rocket.flightTime.toFixed(1)} s</div>
+            <div className="bg-slate-700 rounded-lg p-3 sm:p-6">
+              <div className="text-slate-400 text-xs sm:text-sm mb-1">Flight Time</div>
+              <div className="text-lg sm:text-3xl font-bold text-orange-400">{rocket.flightTime.toFixed(1)} s</div>
             </div>
           </div>
 
-          <div className="bg-slate-700 rounded-lg p-8 mb-8">
-            <h1 className="text-4xl font-bold text-white mb-2">{rocket.name}</h1>
+          <div className="bg-slate-700 rounded-lg p-4 sm:p-8 mb-6 sm:mb-8">
+            <h1 className="text-2xl sm:text-4xl font-bold text-white mb-2">{rocket.name}</h1>
             <p className="text-slate-400 mb-4">by {rocket.designer}</p>
             {rocket.description && <p className="text-slate-300 mb-4">{rocket.description}</p>}
             <div className="text-slate-400 text-sm">👁 {rocket.views} views</div>
@@ -134,11 +134,11 @@ export default function RocketDetail() {
           </div>
 
           {/* Comments Section */}
-          <div className="bg-slate-700 rounded-lg p-8">
-            <h2 className="text-2xl font-bold text-white mb-6">Comments ({comments.length})</h2>
+          <div className="bg-slate-700 rounded-lg p-4 sm:p-8">
+            <h2 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">Comments ({comments.length})</h2>
 
             {/* Comment Form */}
-            <form onSubmit={handleCommentSubmit} className="mb-8 p-6 bg-slate-600 rounded-lg">
+            <form onSubmit={handleCommentSubmit} className="mb-6 sm:mb-8 p-3 sm:p-6 bg-slate-600 rounded-lg">
               <div className="mb-4">
                 <input
                   type="text"
@@ -207,11 +207,11 @@ export default function RocketDetail() {
             </div>
           </div>
 
-          <div className="mt-8 flex gap-4">
-            <Link to="/" className="px-6 py-2 rounded bg-slate-600 hover:bg-slate-500 text-white font-semibold transition">
+          <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row gap-3 sm:gap-4">
+            <Link to="/" className="px-5 py-2.5 rounded bg-slate-600 hover:bg-slate-500 text-white font-semibold transition text-center text-sm sm:text-base">
               ← Back to Gallery
             </Link>
-            <Link to="/leaderboard" className="px-6 py-2 rounded bg-orange-500 hover:bg-orange-600 text-white font-semibold transition">
+            <Link to="/leaderboard" className="px-5 py-2.5 rounded bg-orange-500 hover:bg-orange-600 text-white font-semibold transition text-center text-sm sm:text-base">
               View Leaderboard
             </Link>
           </div>

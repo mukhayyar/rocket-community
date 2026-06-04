@@ -9,11 +9,11 @@ function Header() {
 
   return (
     <header className="bg-slate-900 border-b border-slate-700">
-      <div className="max-w-7xl mx-auto px-8 py-4 flex items-center justify-between">
-        <Link to="/" className="text-2xl font-bold text-white hover:text-orange-500 transition">
+      <div className="max-w-7xl mx-auto px-4 py-3 sm:px-8 sm:py-4 flex items-center justify-between">
+        <Link to="/" className="text-xl sm:text-2xl font-bold text-white hover:text-orange-500 transition">
           🚀 RocketHub
         </Link>
-        <nav className="flex gap-6">
+        <nav className="flex gap-3 sm:gap-6 text-sm sm:text-base">
           <Link
             to="/"
             className={`font-semibold transition ${
@@ -36,7 +36,7 @@ function Header() {
               location.pathname === '/leaderboard' ? 'text-orange-500' : 'text-slate-300 hover:text-white'
             }`}
           >
-            Leaderboard
+            Board
           </Link>
         </nav>
       </div>
@@ -46,7 +46,7 @@ function Header() {
 
 function Footer() {
   return (
-    <footer className="bg-slate-900 border-t border-slate-700 text-slate-400 text-center py-6">
+    <footer className="bg-slate-900 border-t border-slate-700 text-slate-400 text-center py-4 sm:py-6 text-xs sm:text-base px-4">
       <p>RocketHub Community — Share your rocket flights 🚀</p>
     </footer>
   )

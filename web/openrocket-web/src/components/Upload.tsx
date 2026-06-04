@@ -67,12 +67,12 @@ export default function Upload() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 p-8">
+    <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 px-4 py-6 sm:p-8">
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-4xl font-bold text-white mb-2">Upload Your Rocket</h1>
-        <p className="text-slate-300 mb-8">Share your rocket flight with the community</p>
+        <h1 className="text-2xl sm:text-4xl font-bold text-white mb-1 sm:mb-2">Upload Your Rocket</h1>
+        <p className="text-slate-300 text-sm sm:text-base mb-6 sm:mb-8">Share your rocket flight with the community</p>
 
-        <form onSubmit={handleSubmit} className="bg-slate-700 rounded-lg p-8 space-y-6">
+        <form onSubmit={handleSubmit} className="bg-slate-700 rounded-lg p-4 sm:p-8 space-y-5 sm:space-y-6">
           {error && <div className="bg-red-500 text-white px-4 py-3 rounded">{error}</div>}
 
           <div>
@@ -112,7 +112,7 @@ export default function Upload() {
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-white font-semibold mb-2">Launch Latitude</label>
               <input
