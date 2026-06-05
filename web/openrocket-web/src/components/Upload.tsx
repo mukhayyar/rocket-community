@@ -11,7 +11,7 @@ export default function Upload() {
     launchLat: '',
     launchLng: '',
   })
-  const [files, setFiles] = useState<{ ork?: File; csv?: File }>({})
+  const [files, setFiles] = useState<{ ork?: File; csv?: File; flightdata?: File }>({})
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -33,8 +33,9 @@ export default function Upload() {
     setLoading(true)
 
     try {
-      if (!files.csv) {
-        setError('CSV file is required')
+      const flightFile = files.flightdata || files.csv
+      if (!flightFile) {
+        setError('Flight data file is required (CSV or XLSX)')
         setLoading(false)
         return
       }
@@ -46,7 +47,7 @@ export default function Upload() {
       form.append('launchLat', formData.launchLat || '0')
       form.append('launchLng', formData.launchLng || '0')
       if (files.ork) form.append('ork', files.ork)
-      form.append('csv', files.csv)
+      form.append('flightdata', flightFile)
 
       const response = await fetch(api.rockets.upload(), {
         method: 'POST',
@@ -151,16 +152,16 @@ export default function Upload() {
           </div>
 
           <div>
-            <label className="block text-white font-semibold mb-2">Flight Data (CSV) *</label>
+            <label className="block text-white font-semibold mb-2">Flight Data (XLSX or CSV) *</label>
             <input
               type="file"
-              accept=".csv"
-              onChange={handleFileChange('csv')}
+              accept=".xlsx,.xls,.csv"
+              onChange={handleFileChange('flightdata')}
               required
               className="w-full px-4 py-2 rounded bg-slate-600 text-slate-300 border border-slate-500"
             />
-            {files.csv && <p className="text-sm text-green-400 mt-1">✓ {files.csv.name}</p>}
-            <p className="text-xs text-slate-400 mt-2">CSV format: time, altitude, xPos, yPos, rollRate, pitchRate, yawRate</p>
+            {files.flightdata && <p className="text-sm text-green-400 mt-1">✓ {files.flightdata.name}</p>}
+            <p className="text-xs text-slate-400 mt-2">OpenRocket XLSX export (recommended) or CSV with: time, altitude, xPos, yPos, rollRate, pitchRate, yawRate</p>
           </div>
 
           <button

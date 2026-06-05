@@ -53,10 +53,16 @@ export default function RocketDetail() {
 
           if (flightData.csvData) {
             const csvLines = flightData.csvData.split('\n').filter((line: string) => line.trim())
-            const trajectory = csvLines.map((line: string) => {
-              const [time, altitude, xPos, yPos, rollRate, pitchRate, yawRate] = line.split(',').map(Number)
-              return { time, altitude, xPos, yPos, rollRate, pitchRate, yawRate }
-            })
+            // First line is header: time,altitude,east,north,rollRate,pitchRate,yawRate,totalVelocity,thrust,drag,mass,mach,aoa
+            const trajectory = csvLines.slice(1).map((line: string) => {
+              const vals = line.split(',').map(Number)
+              return {
+                time: vals[0], altitude: vals[1], xPos: vals[2], yPos: vals[3],
+                rollRate: vals[4], pitchRate: vals[5], yawRate: vals[6],
+                totalVelocity: vals[7], thrust: vals[8], drag: vals[9],
+                mass: vals[10], mach: vals[11], aoa: vals[12],
+              }
+            }).filter((p: any) => !isNaN(p.time))
             setTrajectoryFromCSV(trajectory, flightData.launchLat, flightData.launchLng)
           }
 
