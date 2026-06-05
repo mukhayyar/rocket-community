@@ -3,6 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import { useVisualizerStore } from '../store'
 import { api } from '../lib/api'
 import Scene from './Scene'
+import MapView from './MapView'
 import Dashboard from './Dashboard'
 import Controls from './Controls'
 
@@ -28,7 +29,7 @@ interface Comment {
 
 export default function RocketDetail() {
   const { id } = useParams<{ id: string }>()
-  const { setTrajectoryFromCSV, setRocketGeometry } = useVisualizerStore()
+  const { setTrajectoryFromCSV, setRocketGeometry, setLaunchSite } = useVisualizerStore()
   const [rocket, setRocket] = useState<Rocket | null>(null)
   const [comments, setComments] = useState<Comment[]>([])
   const [loading, setLoading] = useState(true)
@@ -64,6 +65,7 @@ export default function RocketDetail() {
               }
             }).filter((p: any) => !isNaN(p.time))
             setTrajectoryFromCSV(trajectory, flightData.launchLat, flightData.launchLng)
+            setLaunchSite([flightData.launchLng, flightData.launchLat])
           }
 
           if (flightData.orkData) {
@@ -111,8 +113,9 @@ export default function RocketDetail() {
   return (
     <div className="bg-black">
       {/* 3D Visualization */}
-      <div style={{ width: '100vw', height: '40vh', minHeight: '250px', overflow: 'hidden' }} className="sm:!h-[60vh]">
+      <div style={{ width: '100vw', height: '40vh', minHeight: '250px', overflow: 'hidden', position: 'relative' }} className="sm:!h-[60vh]">
         <Scene />
+        <MapView />
         <Dashboard />
         <Controls />
       </div>
