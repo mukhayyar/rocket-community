@@ -36,7 +36,21 @@ export default function Gallery() {
     fetchRockets()
   }, [sortBy])
 
-  if (loading) return <div className="p-8 text-center">Loading gallery...</div>
+  if (loading) return <div className="p-8 text-center text-slate-300">Loading gallery...</div>
+  if (!loading && rockets.length === 0 && sortBy === 'recent') {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 px-4 py-6 sm:p-8">
+        <div className="max-w-7xl mx-auto text-center py-20">
+          <div className="text-6xl mb-6">🚀</div>
+          <h1 className="text-2xl sm:text-4xl font-bold text-white mb-4">Rocket Community</h1>
+          <p className="text-slate-300 text-lg mb-8">No rockets yet. Be the first to upload!</p>
+          <Link to="/upload" className="bg-orange-500 hover:bg-orange-600 text-white px-8 py-4 rounded-lg font-semibold transition inline-block">
+            Upload Your First Rocket
+          </Link>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 px-4 py-6 sm:p-8">
@@ -86,15 +100,15 @@ export default function Gallery() {
                 <p className="text-slate-300 text-xs sm:text-sm mb-2 sm:mb-3">by {rocket.designer}</p>
                 <div className="grid grid-cols-3 gap-1 sm:gap-2 text-xs sm:text-sm text-slate-300">
                   <div>
-                    <div className="font-semibold text-orange-400">{rocket.maxAltitude.toLocaleString()}m</div>
+                    <div className="font-semibold text-orange-400">{(rocket.maxAltitude ?? 0).toLocaleString()}m</div>
                     <div>Altitude</div>
                   </div>
                   <div>
-                    <div className="font-semibold text-orange-400">{rocket.maxDistance.toLocaleString()}m</div>
+                    <div className="font-semibold text-orange-400">{(rocket.maxDistance ?? 0).toLocaleString()}m</div>
                     <div>Distance</div>
                   </div>
                   <div>
-                    <div className="font-semibold text-orange-400">{rocket.flightTime.toFixed(1)}s</div>
+                    <div className="font-semibold text-orange-400">{(rocket.flightTime ?? 0).toFixed(1)}s</div>
                     <div>Time</div>
                   </div>
                 </div>

@@ -14,6 +14,7 @@ export const api = {
     list: (sort: string = 'recent', limit: number = 20, offset: number = 0) =>
       `${API_BASE}/api/rockets?sort=${sort}&limit=${limit}&offset=${offset}`,
     get: (id: string) => `${API_BASE}/api/rockets/${id}`,
+    data: (id: string) => `${API_BASE}/api/rockets/${id}/data`,
     upload: () => `${API_BASE}/api/rockets`,
     comment: (id: string) => `${API_BASE}/api/rockets/${id}/comments`,
   },

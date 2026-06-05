@@ -27,25 +27,37 @@ app.post('/api/rockets', upload.fields([
     return res.status(400).json({ error: 'CSV file is required' })
   }
 
+  // Reject files > 5MB
+  if (csvFile.size > 5 * 1024 * 1024) {
+    return res.status(400).json({ error: 'CSV file too large (max 5MB)' })
+  }
+  if (orkFile && orkFile.size > 10 * 1024 * 1024) {
+    return res.status(400).json({ error: 'ORK file too large (max 10MB)' })
+  }
+
   const csvData = csvFile.buffer.toString('utf-8')
   const orkData = orkFile ? orkFile.buffer.toString('utf-8') : null
-  
-  // Parse CSV to get flight metrics
-  const lines = csvData?.split('\n') || []
-  let maxAlt = 0, maxDist = 0, flightTime = 0
-  
-  if (lines.length > 1) {
-    const points = lines.slice(1).map(line => {
-      const vals = line.split(',').map(v => parseFloat(v))
-      return { time: vals[0], alt: vals[1], east: vals[2], north: vals[3] }
-    }).filter(p => !isNaN(p.time))
-    
-    if (points.length > 0) {
-      maxAlt = Math.max(...points.map(p => p.alt || 0))
-      maxDist = Math.max(...points.map(p => Math.sqrt((p.east || 0) ** 2 + (p.north || 0) ** 2)))
-      flightTime = points[points.length - 1]?.time || 0
-    }
+
+  // Validate CSV has numeric data
+  const lines = csvData.split('\n').filter(l => l.trim())
+  if (lines.length < 2) {
+    return res.status(400).json({ error: 'CSV must have at least 2 data rows' })
   }
+
+  let maxAlt = 0, maxDist = 0, flightTime = 0
+
+  const points = lines.slice(1).map(line => {
+    const vals = line.split(',').map(v => parseFloat(v))
+    return { time: vals[0], alt: vals[1], east: vals[2], north: vals[3] }
+  }).filter(p => !isNaN(p.time) && isFinite(p.time))
+
+  if (points.length === 0) {
+    return res.status(400).json({ error: 'CSV contains no valid numeric data rows' })
+  }
+
+  maxAlt = Math.max(...points.map(p => p.alt || 0))
+  maxDist = Math.max(...points.map(p => Math.sqrt((p.east || 0) ** 2 + (p.north || 0) ** 2)))
+  flightTime = points[points.length - 1]?.time || 0
 
   const id = uuid()
   const stmt = db.prepare(`
@@ -54,68 +66,74 @@ app.post('/api/rockets', upload.fields([
   `)
   
   stmt.run(id, name || 'Unnamed Rocket', designer, description, orkData, csvData, launchLat, launchLng, maxAlt, maxDist, flightTime)
-  
-  // Update leaderboards
-  if (maxAlt > 0) {
-    const leaderStmt = db.prepare(`INSERT INTO leaderboard (id, rocketId, category, value) VALUES (?, ?, ?, ?)`)
-    leaderStmt.run(uuid(), id, 'altitude', maxAlt)
-  }
-  if (maxDist > 0) {
-    const leaderStmt = db.prepare(`INSERT INTO leaderboard (id, rocketId, category, value) VALUES (?, ?, ?, ?)`)
-    leaderStmt.run(uuid(), id, 'distance', maxDist)
-  }
 
-  res.json({ id, success: true, maxAltitude: maxAlt, maxDistance: maxDist })
+  res.json({ id, success: true, maxAltitude: maxAlt, maxDistance: maxDist, flightTime })
 })
 
 // Get all rockets (gallery)
 app.get('/api/rockets', (req, res) => {
-  const { sort = 'recent', limit = 20, offset = 0 } = req.query
+  const sort = req.query.sort || 'recent'
+  const limit = Math.min(Math.max(parseInt(req.query.limit) || 20, 1), 100)
+  const offset = Math.max(parseInt(req.query.offset) || 0, 0)
 
-  let query = 'SELECT id, name, designer, maxAltitude, maxDistance, flightTime, views, featured FROM rockets'
+  const sortColumns = {
+    recent: 'uploadedAt DESC',
+    trending: 'views DESC',
+    altitude: 'maxAltitude DESC',
+    distance: 'maxDistance DESC',
+  }
+  const orderBy = sortColumns[sort] || 'uploadedAt DESC'
 
-  if (sort === 'recent') query += ' ORDER BY uploadedAt DESC'
-  else if (sort === 'trending') query += ' ORDER BY views DESC'
-  else if (sort === 'altitude') query += ' ORDER BY maxAltitude DESC'
-  else if (sort === 'distance') query += ' ORDER BY maxDistance DESC'
-
-  query += ` LIMIT ${limit} OFFSET ${offset}`
-
-  const rockets = db.prepare(query).all()
-  const total = db.prepare('SELECT COUNT(*) as count FROM rockets').get().count
+  const rockets = db.prepare(
+    `SELECT id, name, designer, maxAltitude, maxDistance, flightTime, views, featured FROM rockets ORDER BY ${orderBy} LIMIT ? OFFSET ?`
+  ).all(limit, offset)
 
   res.json(rockets)
 })
 
-// Get single rocket
+// Get single rocket (metadata only — no csvData/orkData)
 app.get('/api/rockets/:id', (req, res) => {
   const { id } = req.params
-  const rocket = db.prepare('SELECT * FROM rockets WHERE id = ?').get(id)
-  
+  const rocket = db.prepare(
+    'SELECT id, name, designer, description, launchLat, launchLng, maxAltitude, maxDistance, flightTime, uploadedAt, views, featured FROM rockets WHERE id = ?'
+  ).get(id)
+
   if (!rocket) return res.status(404).json({ error: 'Rocket not found' })
-  
-  // Increment views
+
   db.prepare('UPDATE rockets SET views = views + 1 WHERE id = ?').run(id)
-  
+
   const comments = db.prepare('SELECT id, author, text, rating, createdAt FROM comments WHERE rocketId = ? ORDER BY createdAt DESC LIMIT 50').all(id)
-  
+
   res.json({ ...rocket, comments })
+})
+
+// Get flight data (heavy payload — loaded separately)
+app.get('/api/rockets/:id/data', (req, res) => {
+  const { id } = req.params
+  const rocket = db.prepare('SELECT csvData, orkData, launchLat, launchLng FROM rockets WHERE id = ?').get(id)
+
+  if (!rocket) return res.status(404).json({ error: 'Rocket not found' })
+
+  res.json(rocket)
 })
 
 // ===== LEADERBOARDS =====
 
 app.get('/api/leaderboards/:category', (req, res) => {
   const { category } = req.params
-  const limit = req.query.limit || 50
+  const limit = Math.min(Math.max(parseInt(req.query.limit) || 50, 1), 100)
 
-  const leaderboard = db.prepare(`
-    SELECT r.id as rocketId, r.name as rocketName, r.designer, l.value
-    FROM leaderboard l
-    JOIN rockets r ON l.rocketId = r.id
-    WHERE l.category = ?
-    ORDER BY l.value DESC
-    LIMIT ?
-  `).all(category, parseInt(limit))
+  const columnMap = {
+    altitude: 'maxAltitude',
+    distance: 'maxDistance',
+    duration: 'flightTime',
+  }
+  const col = columnMap[category]
+  if (!col) return res.status(400).json({ error: 'Invalid category. Use: altitude, distance, duration' })
+
+  const leaderboard = db.prepare(
+    `SELECT id as rocketId, name as rocketName, designer, ${col} as value FROM rockets WHERE ${col} > 0 ORDER BY ${col} DESC LIMIT ?`
+  ).all(limit)
 
   res.json(leaderboard)
 })

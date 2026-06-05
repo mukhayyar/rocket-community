@@ -46,19 +46,23 @@ export default function RocketDetail() {
         setRocket(data)
         setComments(data.comments || [])
 
-        // Load trajectory data
-        if (data.csvData) {
-          const csvLines = data.csvData.split('\n').filter((line: string) => line.trim())
-          const trajectory = csvLines.map((line: string) => {
-            const [time, altitude, xPos, yPos, rollRate, pitchRate, yawRate] = line.split(',').map(Number)
-            return { time, altitude, xPos, yPos, rollRate, pitchRate, yawRate }
-          })
-          setTrajectoryFromCSV(trajectory, data.launchLat, data.launchLng)
-        }
+        // Load flight data separately (heavy payload)
+        const dataResponse = await fetch(api.rockets.data(id || ''))
+        if (dataResponse.ok) {
+          const flightData = await dataResponse.json()
 
-        // Load rocket geometry
-        if (data.orkData) {
-          setRocketGeometry(data.orkData)
+          if (flightData.csvData) {
+            const csvLines = flightData.csvData.split('\n').filter((line: string) => line.trim())
+            const trajectory = csvLines.map((line: string) => {
+              const [time, altitude, xPos, yPos, rollRate, pitchRate, yawRate] = line.split(',').map(Number)
+              return { time, altitude, xPos, yPos, rollRate, pitchRate, yawRate }
+            })
+            setTrajectoryFromCSV(trajectory, flightData.launchLat, flightData.launchLng)
+          }
+
+          if (flightData.orkData) {
+            setRocketGeometry(flightData.orkData)
+          }
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load rocket')
@@ -72,7 +76,7 @@ export default function RocketDetail() {
 
   const handleCommentSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!newComment.author.trim() || !newComment.text.trim()) return
+    if (!newComment.text.trim()) return
 
     setSubmittingComment(true)
     try {
