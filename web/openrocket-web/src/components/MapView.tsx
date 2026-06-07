@@ -14,11 +14,33 @@ export default function MapView() {
 
     map.current = new maplibre.Map({
       container: mapContainer.current,
-      style: 'https://demotiles.maplibre.org/style.json',
+      style: {
+        version: 8,
+        sources: {
+          'satellite': {
+            type: 'raster',
+            tiles: [
+              'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+            ],
+            tileSize: 256,
+            attribution: 'Esri, Maxar, Earthstar Geographics',
+            maxzoom: 19,
+          },
+        },
+        layers: [
+          {
+            id: 'satellite-layer',
+            type: 'raster',
+            source: 'satellite',
+            minzoom: 0,
+            maxzoom: 19,
+          },
+        ],
+      },
       center: launchSite || [0, 0],
-      zoom: 13,
-      pitch: 45,
-      bearing: 0,
+      zoom: 14,
+      pitch: 60,
+      bearing: -20,
     })
 
     map.current.on('load', () => {
