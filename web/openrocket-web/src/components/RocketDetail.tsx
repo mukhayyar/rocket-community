@@ -28,7 +28,16 @@ interface Comment {
 
 export default function RocketDetail() {
   const { id } = useParams<{ id: string }>()
-  const { setTrajectoryFromCSV, setRocketGeometry, setLaunchSite } = useVisualizerStore()
+  const { trajectory, currentFrame, setCurrentFrame, isPlaying, playbackSpeed, setTrajectoryFromCSV, setRocketGeometry, setLaunchSite } = useVisualizerStore()
+
+  // Playback loop
+  useEffect(() => {
+    if (!isPlaying || trajectory.length === 0) return
+    const interval = setInterval(() => {
+      setCurrentFrame((currentFrame + 1) % trajectory.length)
+    }, (1000 / 60) / playbackSpeed)
+    return () => clearInterval(interval)
+  }, [isPlaying, currentFrame, trajectory.length, playbackSpeed, setCurrentFrame])
   const [rocket, setRocket] = useState<Rocket | null>(null)
   const [comments, setComments] = useState<Comment[]>([])
   const [loading, setLoading] = useState(true)
