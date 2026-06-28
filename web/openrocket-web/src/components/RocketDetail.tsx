@@ -141,7 +141,7 @@ export default function RocketDetail() {
             <p className="text-slate-400 mb-4">by {rocket.designer}</p>
             {rocket.description && <p className="text-slate-300 mb-4">{rocket.description}</p>}
             <div className="text-slate-400 text-sm">👁 {rocket.views} views</div>
-            {rocket.featured && <div className="text-yellow-500 text-sm mt-2">⭐ Featured Rocket</div>}
+            {rocket.featured ? <div className="text-yellow-500 text-sm mt-2">Featured Rocket</div> : null}
           </div>
 
           {/* Comments Section */}

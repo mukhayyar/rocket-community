@@ -95,7 +95,7 @@ export default function Gallery() {
                 <div className="text-3xl sm:text-4xl">🚀</div>
               </div>
               <div className="p-3 sm:p-4">
-                {rocket.featured && <div className="text-xs sm:text-sm bg-yellow-500 text-black px-2 py-0.5 rounded mb-2 inline-block">Featured</div>}
+                {rocket.featured ? <div className="text-xs sm:text-sm bg-yellow-500 text-black px-2 py-0.5 rounded mb-2 inline-block">Featured</div> : null}
                 <h3 className="text-lg sm:text-xl font-bold text-white mb-1 truncate">{rocket.name}</h3>
                 <p className="text-slate-300 text-xs sm:text-sm mb-2 sm:mb-3">by {rocket.designer}</p>
                 <div className="grid grid-cols-3 gap-1 sm:gap-2 text-xs sm:text-sm text-slate-300">
