@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { useVisualizerStore } from '../store'
 import { api } from '../lib/api'
-import Scene from './Scene'
-import MapView from './MapView'
+import FlightMap from './FlightMap'
 import Dashboard from './Dashboard'
 import Controls from './Controls'
 
@@ -112,10 +111,9 @@ export default function RocketDetail() {
 
   return (
     <div className="bg-black">
-      {/* 3D Visualization */}
-      <div style={{ width: '100vw', height: '40vh', minHeight: '250px', overflow: 'hidden', position: 'relative' }} className="sm:!h-[60vh]">
-        <Scene />
-        <MapView />
+      {/* Flight Map */}
+      <div style={{ width: '100vw', height: '50vh', minHeight: '350px', overflow: 'hidden', position: 'relative' }} className="sm:!h-[65vh]">
+        <FlightMap />
         <Dashboard />
         <Controls />
       </div>
